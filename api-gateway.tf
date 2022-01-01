@@ -82,4 +82,12 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   stage_name        = var.stage
   description       = "API deployment"
   stage_description = "API deployment"
+
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.v1_healthcheck.id,
+      aws_api_gateway_method.healthcheck.id,
+      aws_api_gateway_integration.healthcheck.id,
+    ]))
+  }
 }
